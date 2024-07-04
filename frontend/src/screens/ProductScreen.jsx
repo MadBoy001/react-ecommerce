@@ -1,12 +1,15 @@
 import { Link, useParams } from "react-router-dom";
-import { ListGroup, Row, Col, Card, Button, Image } from "react-bootstrap";
+import { ListGroup, Row, Col, Card, Button, Image, Form } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { useState } from "react";
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
+
+  const[qty, setQty] = useState(1);
 
   const {
     data: product,
@@ -74,6 +77,23 @@ const ProductScreen = () => {
                       </Col>
                     </Row>
                   </ListGroup.Item>
+
+                  {product.countInStock > 0 && (
+                    <ListGroup.Item>
+                      <Row>
+                        <Col>Quantity:</Col>
+                        <Col>
+                          <Form.Control
+                            as="select"
+                            value={qty}
+                            onChnage={(e) => setQty(Number(e.target.value))}
+                          >
+                            {[...Array(product.countInStock).keys()]}
+                          </Form.Control>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  )}
 
                   <ListGroup.Item>
                     <Button
